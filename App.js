@@ -1,34 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Button, FlatList } from 'react-native';
+
+import GoalItem from './components/GoalItem';
+import GoalInput from './components/GoalInput';
 
 export default function App() {
-  const [data,setData]=useState();
-  useEffect(()=>{
-  var array = ["C","CN","CN U","CN Ud","CN Ude","CN Udem","CN Udemy","CN Udemy E","CN Udemy Ex","CN Udemy Exp","CN Udemy Expo"];
-  var i = 0;
-  setInterval(()=>{
-    setData(array[i]);
-    i > array.length? i = 0: i += 1;
-  },1500)
-  
-    
-  },[])
+  const [courseGoals, setCourseGoals] = useState([]);
+  const [isAddMode, setIsAddMode] = useState(false);
+
+  const addGoalHandler = goalTitle => {
+    setCourseGoals(currentGoals => [
+      { id: Math.random().toString(), value: goalTitle },
+      ...currentGoals
+    ]);
+
+    //or
+    // setCourseGoals(currentGoals => [
+    //   ...currentGoals,
+    //   { id: Math.random().toString(), value: goalTitle }
+    // ]);
+    // courseGoals.push({ id: Math.random().toString(), value: goalTitle });
+    // courseGoals.unshift({ id: Math.random().toString(), value: goalTitle });
+    setIsAddMode(false);
+  };
+
+  const removeGoalHandler = goalId => {
+    setCourseGoals(currentGoals => {
+      return currentGoals.filter(goal => goal.id !== goalId);
+    });
+  };
+
+  const cancelGoalAdditionHandler = () => {
+    setIsAddMode(false);
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.textcontainer}>{data}</Text>
+    <View style={styles.screen}>
+      <Button title="Add New Goal" onPress={() => setIsAddMode(true)} />
+      <GoalInput
+        visible={isAddMode}
+        onAddGoal={addGoalHandler}
+        onCancel={cancelGoalAdditionHandler}
+      />
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(item, index) => item.id}
+        data={courseGoals}
+        renderItem={({item}) => (
+          <GoalItem
+            id={item.id}
+            onDelete={()=> removeGoalHandler(item.id)}
+            title={item.value}
+          />
+        )}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  textcontainer:{
-    color:"green",
-    fontSize:45,
+  screen: {
+    padding: 50
   }
 });
