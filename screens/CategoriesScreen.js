@@ -1,10 +1,7 @@
 import React from 'react';
 import {
-  View,
-  Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity
 } from 'react-native';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
@@ -13,16 +10,16 @@ import { CATEGORIES } from '../data/dummy-data';
 import CategoryGridTile from '../components/CategoryGridTile';
 
 const CategoriesScreen = props => {
-  const renderGridItem = itemData => {
+  const renderGridItem = ({item}) => {
     return (
       <CategoryGridTile
-        title={itemData.item.title}
-        color={itemData.item.color}
+        title={item.title}
+        color={item.color}
         onSelect={() => {
           props.navigation.navigate({
             routeName: 'CategoryMeals',
             params: {
-              categoryId: itemData.item.id
+              categoryId: item.id
             }
           });
         }}
@@ -32,6 +29,7 @@ const CategoriesScreen = props => {
 
   return (
     <FlatList
+      showsVerticalScrollIndicator={false}
       keyExtractor={(item, index) => item.id}
       data={CATEGORIES}
       renderItem={renderGridItem}
