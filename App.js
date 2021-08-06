@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { Text, View } from 'react-native';
 import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
-// import { useScreens } from 'react-native-screens';
 import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
 
-import MealsNavigator from './navigation/MealsNavigator';
-import mealsReducer from './store/reducers/meals';
+import productsReducer from './store/reducers/products';
+import cartReducer from './store/reducers/cart';
+import ordersReducer from './store/reducers/orders';
+import ShopNavigator from './navigation/ShopNavigator';
 
-// useScreens();
 
 const rootReducer = combineReducers({
-  meals: mealsReducer
+  products: productsReducer,
+  cart: cartReducer,
+  orders: ordersReducer
 });
 
 const store = createStore(rootReducer);
@@ -39,7 +40,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
-      <MealsNavigator />
+     <ShopNavigator />
     </Provider>
   );
 }
